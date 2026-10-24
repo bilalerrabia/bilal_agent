@@ -1,0 +1,57 @@
+# bilal_agent configuration
+# Safe to commit: contains NO secrets - api keys live in .env, referenced here by env var name.
+# Switch provider by changing `active`, or override at runtime: bilal --provider openrouter
+
+active = "zenmux"
+
+# ---------------------------------------------------------------------------
+[providers.zenmux]
+base_url = "https://zenmux.ai/api/v1"
+model = "z-ai/glm-5.3-flash"
+api_key_env = "ZENMUX_API_KEY"
+
+# ---------------------------------------------------------------------------
+[providers.openrouter]
+base_url = "https://openrouter.ai/api/v1"
+model = "anthropic/claude-sonnet-4.5"
+api_key_env = "OPENROUTER_API_KEY"
+
+# ---------------------------------------------------------------------------
+[providers.openai]
+base_url = "https://api.openai.com/v1"
+model = "gpt-4.1-mini"
+api_key_env = "OPENAI_API_KEY"
+
+# ---------------------------------------------------------------------------
+# Ollama: `ollama serve` then `ollama pull qwen2.5-coder:7b`, no key needed
+[providers.local]
+base_url = "http://localhost:11434/v1"
+model = "qwen2.5-coder:7b"
+api_key_env = ""
+
+# ---------------------------------------------------------------------------
+[agent]
+max_iterations = 60        # hard stop per user request (tool rounds); the agent warns visibly when hit
+max_output_tokens = 8192   # cap for one model response
+llm_timeout = 300          # seconds for ONE llm request; raise for slow providers
+stream = true              # stream tokens live; set false if your proxy dislikes streaming
+# temperature = 0.2        # passed to the API when set (commented = provider default)
+# budget_usd = 2.0         # soft session budget: warns at 80% and 100% (/reset-budget zeroes it)
+
+# ---------------------------------------------------------------------------
+# Cost estimation for the HUD / /cost / /stats (USD per 1M tokens).
+# Commented = a built-in list-price table is matched by model name; /cost shows
+# the source. Set explicit values here to override it.
+# [pricing]
+# input_per_m = 3.0
+# output_per_m = 15.0
+
+# ---------------------------------------------------------------------------
+[context]
+max_tokens = 60000         # estimated ledger size that triggers compaction
+keep_recent = 8            # recent messages kept verbatim when compacting
+
+# ---------------------------------------------------------------------------
+[safety]
+confirm_edits = true       # prompt y/n for write/edit/bash (bypass: bilal --yes)
+command_timeout = 60       # seconds per run_command call

@@ -1,0 +1,26 @@
+[project]
+name = "bilal-agent"
+version = "0.4.2"
+description = "A terminal AI coding agent - reads, greps, edits and runs commands in your project"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Bilal" }]
+dependencies = [
+    "openai>=1.40,<3",
+    "rich>=13.0",
+]
+
+[project.scripts]
+bilal = "bilal_agent.cli:main"
+bilal_agent = "bilal_agent.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["bilal_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
